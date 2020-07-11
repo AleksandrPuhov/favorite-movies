@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Favorite Movies</title>
+
+    <!--build:css css/style.min.css -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- endbuild -->
+
+    <!--build:js js/main.min.js -->
+    <script src="js/main.js" defer></script>
+    <!-- endbuild -->
+
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header__title">Favorite Movies</h1>
+        <button class="header__btn" id="start-add-movie-button">ADD MOVIE</button>
+    </header>
+    <main class="main">
+        <section class="cards">
+            <p class="cards__text" id="entry-text">Your personal movie database!</p>
+            <ul class="cards__list" id="movie-list"></ul>
+        </section>
+    </main>
+
+    <div class="backdrop" id="backdrop"></div>
+    <div class="modal" id="add-modal">
+        <div class="modal__content">
+            <label class="modal__content-label" for="title">Movie Title</label>
+            <input type="text" class="modal__content-input" name="title" id="title" />
+            <label class="modal__content-label" for="image-url">Image URL</label>
+            <input type="text" class="modal__content-input" name="image-url" id="image-url" />
+            <label class="modal__content-label" for="rating">Your Rating</label>
+            <input type="number" class="modal__content-input" step="1" max="5" min="1" name="rating" id="rating" />
+        </div>
+        <div class="modal__actions">
+            <button class="btn btn--passive" id="cancel-btn-add-modal">Cancel</button>
+            <button class="btn btn--success" id="add-btn-add-modal">Add</button>
+        </div>
+    </div>
+    <div class="modal" id="delete-modal">
+        <h2 class="modal__title">Are you sure?</h2>
+        <p class="modal__content">
+            Are you sure you want to delete this item? This action can't be made
+            undone!
+        </p>
+        <div class="modal__actions">
+            <button class="btn btn--passive">No (Cancel)</button>
+            <button class="btn btn--danger">Yes</button>
+        </div>
+    </div>
+
+</body>
+
+</html>
