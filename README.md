@@ -1,10 +1,10 @@
-# Monster Killer
+# Favorite Movies
 
-This is a demo project. In this app you can battle with monster.
+This is a demo project.
 
 ## Installation
 
-Clone this repo to your local machine using https://github.com/AleksandrPuhov/monster-killer.git
+Clone this repo to your local machine using https://github.com/AleksandrPuhov/favorite-movies.git
 
 Use the npm package manager.
 

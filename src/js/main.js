@@ -3,15 +3,44 @@ const cancelButtonAddModal = document.getElementById('cancel-btn-add-modal');
 const addButtonAddModal = document.getElementById('add-btn-add-modal');
 const userInputs = addMovieModal.querySelectorAll('.modal__content-input');
 
+const deleteMovieModal = document.getElementById('delete-modal');
+const noButtonDeleteModal = document.getElementById('no-btn-delete-modal');
+const yesButtonDeleteModal = document.getElementById('yes-btn-delete-modal');
+
 const startAddMovieButton = document.getElementById('start-add-movie-button');
 const backdrop = document.getElementById('backdrop');
 
 const entryText = document.getElementById('entry-text');
 const listRoot = document.getElementById('movie-list');
 
-const movie = [];
+const movies = [];
+let needDeleteMovieId = 0;
 
-const renderNewMovieElement = (title, imageUrl, raiting) => {
+const updateUI = () => {
+    entryText.style.display = movies.length > 0 ? 'none' : 'block';
+};
+
+const deleteMovie = (movieId) => {
+    let movieIndex = 0;
+
+    for (const movie of movies) {
+        if (movie.id === movieId) {
+            break;
+        }
+        movieIndex++;
+    }
+
+    movies.splice(movieIndex, 1);
+
+    listRoot.children[movieIndex].remove();
+};
+
+const deleteMovieHandler = (movieId) => {
+    showDeleteModal();
+    needDeleteMovieId = movieId;
+};
+
+const renderNewMovieElement = (id, title, imageUrl, raiting) => {
     const newMovieElement = document.createElement('li');
     newMovieElement.className = 'movie-element';
     newMovieElement.innerHTML = `
@@ -23,20 +52,39 @@ const renderNewMovieElement = (title, imageUrl, raiting) => {
             <p>${raiting}/5 starts</p>
         </div>
     `;
+    newMovieElement.addEventListener(
+        'click',
+        deleteMovieHandler.bind(null, id)
+    );
     listRoot.appendChild(newMovieElement);
 };
 
-const updateUI = () => {
-    entryText.style.display = movie.length > 0 ? 'none' : 'block';
+const showBackdrop = () => {
+    backdrop.classList.add('visible');
 };
 
-const toggleBackdrop = () => {
-    backdrop.classList.toggle('visible');
+const closeBackdrop = () => {
+    backdrop.classList.remove('visible');
 };
 
-const toggleMovieModal = () => {
-    addMovieModal.classList.toggle('visible');
-    toggleBackdrop();
+const showMovieModal = () => {
+    addMovieModal.classList.add('visible');
+    showBackdrop();
+};
+
+const closeMovieModal = () => {
+    addMovieModal.classList.remove('visible');
+    closeBackdrop();
+};
+
+const showDeleteModal = () => {
+    deleteMovieModal.classList.add('visible');
+    showBackdrop();
+};
+
+const closeDeleteModal = () => {
+    deleteMovieModal.classList.remove('visible');
+    closeBackdrop();
 };
 
 const clearMovieInputs = () => {
@@ -60,31 +108,49 @@ const addMovieHandler = () => {
     }
 
     const newMovie = {
+        id: Math.random().toString(),
         title: titleValue,
         image: imageUrlValue,
         raiting: raitingValue,
     };
 
-    movie.push(newMovie);
-    console.log(movie);
+    movies.push(newMovie);
+    console.log(movies);
 
     clearMovieInputs();
-    toggleMovieModal();
-    renderNewMovieElement(newMovie.title, newMovie.image, newMovie.raiting);
+    closeMovieModal();
+    renderNewMovieElement(
+        newMovie.id,
+        newMovie.title,
+        newMovie.image,
+        newMovie.raiting
+    );
     updateUI();
 };
 
 startAddMovieButton.addEventListener('click', () => {
-    toggleMovieModal();
+    showMovieModal();
 });
 
 backdrop.addEventListener('click', () => {
-    toggleMovieModal();
+    closeMovieModal();
+    clearMovieInputs();
+    closeDeleteModal();
 });
 
 cancelButtonAddModal.addEventListener('click', () => {
-    toggleMovieModal();
+    closeMovieModal();
     clearMovieInputs();
 });
 
 addButtonAddModal.addEventListener('click', addMovieHandler);
+
+noButtonDeleteModal.addEventListener('click', () => {
+    closeDeleteModal();
+});
+
+yesButtonDeleteModal.addEventListener('click', () => {
+    deleteMovie(needDeleteMovieId);
+    closeDeleteModal();
+    updateUI();
+});
