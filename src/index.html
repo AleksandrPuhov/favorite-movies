@@ -23,9 +23,14 @@
         <h1 class="header__title">Favorite Movies</h1>
         <button class="header__btn" id="start-add-movie-button">ADD MOVIE</button>
     </header>
-    <main class="main">
+    <main>
         <section class="cards">
             <p class="cards__text" id="entry-text">Your personal movie database!</p>
+            <div id="filter" class="cards__filter">
+                <label class="cards__filter-title" for="filter-title">Filter by Title</label>
+                <input type="text" class="cards__filter-input" id="filter-title" />
+                <button id="search-btn" class="cards__filter-search">Search</button>
+            </div>
             <ul class="cards__list" id="movie-list"></ul>
         </section>
     </main>
@@ -35,9 +40,17 @@
         <div class="modal__content">
             <label class="modal__content-label" for="title">Movie Title</label>
             <input type="text" class="modal__content-input" name="title" id="title" />
-            <label class="modal__content-label" for="image-url">Image URL</label>
-            <input type="text" class="modal__content-input" name="image-url" id="image-url" />
-            <label class="modal__content-label" for="rating">Your Rating</label>
+            <div class="modal__content-controls">
+                <div class="modal__content-controls-item">
+                    <label for="extra-name" class="modal__content-label">Extra Information (Name)</label>
+                    <input type="text" class="modal__content-input" />
+                </div>
+                <div class="modal__content-controls-item">
+                    <label for="extra-value" class="modal__content-label">Extra Information (Value)</label>
+                    <input type="text" class="modal__content-input" />
+                </div>
+            </div>
+            <label class="modal__content-label" for="rating">Your Rating (1 - 5)</label>
             <input type="number" class="modal__content-input" step="1" max="5" min="1" name="rating" id="rating" />
         </div>
         <div class="modal__actions">

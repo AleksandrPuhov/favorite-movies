@@ -45,6 +45,7 @@
             border: 1px solid #ccc;
             padding: 0.4rem 0.2rem;
             color: #383838;
+            width: 100%;
 
             &:focus {
                 outline: none;
@@ -53,9 +54,19 @@
         }
 
         &-label {
+            display: block;
             font-weight: bold;
             margin: 0.5rem 0;
             color: #464646;
+        }
+
+        &-controls {
+            display: flex;
+            justify-content: space-between;
+            &-item {
+                margin: 1rem 0;
+                flex-basis: 48%;
+            }
         }
     }
 

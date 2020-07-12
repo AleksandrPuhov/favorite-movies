@@ -13,22 +13,22 @@ const backdrop = document.getElementById('backdrop');
 const entryText = document.getElementById('entry-text');
 const listRoot = document.getElementById('movie-list');
 
+const filter = document.getElementById('filter');
+const searchButton = document.getElementById('search-btn');
+const filterInput = document.getElementById('filter-title');
+
 const movies = [];
 let needDeleteMovieId = 0;
 
 const updateUI = () => {
     entryText.style.display = movies.length > 0 ? 'none' : 'block';
+    filter.style.display = movies.length > 0 ? 'block' : 'none';
 };
 
 const deleteMovie = (movieId) => {
-    let movieIndex = 0;
-
-    for (const movie of movies) {
-        if (movie.id === movieId) {
-            break;
-        }
-        movieIndex++;
-    }
+    const movieIndex = movies.findIndex((movie) => {
+        return movie.id === movieId;
+    });
 
     movies.splice(movieIndex, 1);
 
@@ -40,23 +40,38 @@ const deleteMovieHandler = (movieId) => {
     needDeleteMovieId = movieId;
 };
 
-const renderNewMovieElement = (id, title, imageUrl, raiting) => {
-    const newMovieElement = document.createElement('li');
-    newMovieElement.className = 'movie-element';
-    newMovieElement.innerHTML = `
-        <div class="movie-element__image">
-            <img src="${imageUrl}" alt="${title}">
-        </div>
+const renderMovies = (filterText = '') => {
+    listRoot.innerHTML = '';
+
+    const filterMovies = !filterText
+        ? movies
+        : movies.filter((movie) => {
+              return movie.info.title.includes(filterText);
+          });
+
+    filterMovies.forEach((movie) => {
+        const movieEl = document.createElement('li');
+        movieEl.className = 'movie-element';
+
+        let text = '';
+        for (key in movie.info) {
+            if (key !== 'title' && key !== 'raiting') {
+                text = `${key} : ${movie.info[key]}`;
+            }
+        }
+        movieEl.innerHTML = `
         <div class="movie-element__info">
-            <h2>${title}</h2>
-            <p>${raiting}/5 starts</p>
+            <h2>${movie.info.title}</h2>
+            <h3>${text}</h3>
+            <p>${movie.info.raiting}/5 starts</p>
         </div>
-    `;
-    newMovieElement.addEventListener(
-        'click',
-        deleteMovieHandler.bind(null, id)
-    );
-    listRoot.appendChild(newMovieElement);
+        `;
+        movieEl.addEventListener(
+            'click',
+            deleteMovieHandler.bind(null, movie.id)
+        );
+        listRoot.append(movieEl);
+    });
 };
 
 const showBackdrop = () => {
@@ -92,16 +107,18 @@ const clearMovieInputs = () => {
 };
 
 const addMovieHandler = () => {
-    const titleValue = userInputs[0].value;
-    const imageUrlValue = userInputs[1].value;
-    const raitingValue = userInputs[2].value;
+    const title = userInputs[0].value;
+    const extraName = userInputs[1].value;
+    const extraValue = userInputs[2].value;
+    const raiting = userInputs[3].value;
 
     if (
-        titleValue.trim() === '' ||
-        imageUrlValue.trim() === '' ||
-        raitingValue.trim() === '' ||
-        +raitingValue < 1 ||
-        +raitingValue > 5
+        title.trim() === '' ||
+        extraName.trim() === '' ||
+        extraValue.trim() === '' ||
+        raiting.trim() === '' ||
+        +raiting < 1 ||
+        +raiting > 5
     ) {
         alert('Please enter valid value');
         return;
@@ -109,23 +126,19 @@ const addMovieHandler = () => {
 
     const newMovie = {
         id: Math.random().toString(),
-        title: titleValue,
-        image: imageUrlValue,
-        raiting: raitingValue,
+        info: {
+            title: title,
+            [extraName]: extraValue,
+            raiting: raiting,
+        },
     };
 
     movies.push(newMovie);
-    console.log(movies);
 
     clearMovieInputs();
     closeMovieModal();
-    renderNewMovieElement(
-        newMovie.id,
-        newMovie.title,
-        newMovie.image,
-        newMovie.raiting
-    );
     updateUI();
+    renderMovies();
 };
 
 startAddMovieButton.addEventListener('click', () => {
@@ -153,4 +166,8 @@ yesButtonDeleteModal.addEventListener('click', () => {
     deleteMovie(needDeleteMovieId);
     closeDeleteModal();
     updateUI();
+});
+
+searchButton.addEventListener('click', () => {
+    renderMovies(filterInput.value);
 });
